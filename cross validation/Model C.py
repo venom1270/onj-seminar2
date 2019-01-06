@@ -195,11 +195,11 @@ def predict(DATA_train, DATA_test):
 
                 synsets2 = [ss for ss in synsets2 if ss]
 
-                score, count = 0.0, 0
+                synset1_score, count = 0.0, 0
 
                 # For each word in the first sentence
 
-                idf_sum = 0
+                synset1_idf_sum = 0
 
                 for synset in synsets1:
                     # Get the similarity value of the most similar word in the other sentence
@@ -207,36 +207,56 @@ def predict(DATA_train, DATA_test):
                     arr = [synset.path_similarity(ss) for ss in synsets2 if synset.path_similarity(ss)]
                     if len(arr) == 0:
                         continue
-                    best_score = max([synset.path_similarity(ss) for ss in synsets2 if synset.path_similarity(ss)])
+                    best_score = max(arr)
                     #best_score = 0
                     #for ss in synsets2:
                     #    best_score = max(score, synset.path_similarity(ss))
 
                     idf_bottom = len([1 for t in pre_answers_10[d] if synset.lemmas()[0].name() in t])
-                    if idf_bottom == 0:
-                        idf = 0
-                    else:
-                        idf = math.log(len(pre_answers_10[d]) / idf_bottom)
+                    idf = 0
+                    idf = math.log(len(pre_answers_10[d]) / (1+idf_bottom))
                     best_score *= idf
-                    idf_sum += idf
+                    synset1_idf_sum += idf
 
                     # Check that the similarity could have been computed
                     if best_score is not None:
-                        score += best_score
+                        synset1_score += best_score
                         count += 1
-
-                # Average the values
-
-
 
                 #if count != 0:
                 #    score /= count
-                if idf_sum != 0:
-                    score = score / idf_sum
+                if synset1_idf_sum != 0:
+                    synset1_score = synset1_score / synset1_idf_sum
                 else:
-                    score = 0
+                    synset1_score = 0
                 #print(score)
-                max_score = max(max_score, score)
+
+                synset2_score = 0
+                synset2_idf_sum = 0
+                for synset in synsets2:
+                    arr = [synset.path_similarity(ss) for ss in synsets1 if synset.path_similarity(ss)]
+                    if len(arr) == 0:
+                        continue
+                    best_score = max(arr)
+                    idf_bottom = len([1 for t in pre_answers_10[d] if synset.lemmas()[0].name() in t])
+                    idf = 0
+
+                    idf = math.log(len(pre_answers_10[d]) / (1+idf_bottom))
+                    best_score *= idf
+                    synset2_idf_sum += idf
+
+                    # Check that the similarity could have been computed
+                    if best_score is not None:
+                        synset2_score += best_score
+
+                if synset2_idf_sum != 0:
+                    synset2_score = synset2_score / synset2_idf_sum
+                else:
+                    synset2_score = 0
+
+                final_score = (synset1_score + synset2_score)/2
+
+                max_score = max(max_score, final_score)
 
             if max_score > 0.6:
                 p = 1
@@ -316,13 +336,13 @@ D = 11
 Correct:  88 / 166
               precision    recall  f1-score   support
 
-         0.0       0.33      0.03      0.05        34
-         1.0       0.22      0.05      0.08        43
-         2.0       0.55      0.96      0.70        89
+         0.0       0.25      0.03      0.05        34
+         1.0       0.24      0.09      0.13        43
+         2.0       0.57      0.93      0.71        89
 
    micro avg       0.53      0.53      0.53       166
-   macro avg       0.37      0.34      0.28       166
-weighted avg       0.42      0.53      0.41       166
+   macro avg       0.35      0.35      0.30       166
+weighted avg       0.42      0.53      0.43       166
 
 K =  0.4
 1 26 29
@@ -338,16 +358,16 @@ D = 8
 D = 9
 D = 10
 D = 11
-Correct:  107 / 169
+Correct:  108 / 169
               precision    recall  f1-score   support
 
-         0.0       0.75      0.30      0.43        20
-         1.0       0.21      0.08      0.11        39
-         2.0       0.67      0.89      0.76       110
+         0.0       0.67      0.30      0.41        20
+         1.0       0.18      0.05      0.08        39
+         2.0       0.67      0.91      0.77       110
 
-   micro avg       0.63      0.63      0.63       169
-   macro avg       0.54      0.42      0.43       169
-weighted avg       0.57      0.63      0.57       169
+   micro avg       0.64      0.64      0.64       169
+   macro avg       0.51      0.42      0.42       169
+weighted avg       0.56      0.64      0.57       169
 
 K =  0.6000000000000001
 2 27 25
@@ -363,16 +383,16 @@ D = 8
 D = 9
 D = 10
 D = 11
-Correct:  131 / 170
+Correct:  132 / 170
               precision    recall  f1-score   support
 
          0.0       0.50      0.10      0.17        10
-         1.0       0.13      0.11      0.12        19
-         2.0       0.84      0.91      0.87       141
+         1.0       0.00      0.00      0.00        19
+         2.0       0.82      0.93      0.87       141
 
-   micro avg       0.77      0.77      0.77       170
-   macro avg       0.49      0.37      0.39       170
-weighted avg       0.74      0.77      0.75       170
+   micro avg       0.78      0.78      0.78       170
+   macro avg       0.44      0.34      0.35       170
+weighted avg       0.71      0.78      0.73       170
 
 K =  0.8
 2 25 29
@@ -388,16 +408,16 @@ D = 8
 D = 9
 D = 10
 D = 11
-Correct:  128 / 169
+Correct:  130 / 169
               precision    recall  f1-score   support
 
          0.0       0.43      0.20      0.27        15
-         1.0       0.09      0.05      0.07        19
-         2.0       0.82      0.92      0.87       135
+         1.0       0.00      0.00      0.00        19
+         2.0       0.84      0.94      0.89       135
 
-   micro avg       0.76      0.76      0.76       169
-   macro avg       0.45      0.39      0.40       169
-weighted avg       0.70      0.76      0.72       169
+   micro avg       0.77      0.77      0.77       169
+   macro avg       0.42      0.38      0.39       169
+weighted avg       0.71      0.77      0.73       169
 
 K =  1.0
 2 28 27
@@ -413,18 +433,157 @@ D = 8
 D = 9
 D = 10
 D = 11
-Correct:  127 / 176
+Correct:  133 / 176
               precision    recall  f1-score   support
 
-         0.0       0.67      0.50      0.57        12
+         0.0       0.62      0.42      0.50        12
          1.0       0.00      0.00      0.00        28
-         2.0       0.79      0.89      0.83       136
+         2.0       0.80      0.94      0.86       136
 
-   micro avg       0.72      0.72      0.72       176
-   macro avg       0.48      0.46      0.47       176
-weighted avg       0.65      0.72      0.68       176
+   micro avg       0.76      0.76      0.76       176
+   macro avg       0.47      0.45      0.45       176
+weighted avg       0.66      0.76      0.70       176
 
-F1 micro:  0.6825664341382872
-F1 macro:  0.3934993773245003
+F1 micro:  0.6941113824026924
+F1 macro:  0.3814038702409588
 
+Process finished with exit code 0
+
+
+'''
+
+
+# RUN 2 (with tfidf_bottom + 1)
+
+'''
+C:\ProgramData\Miniconda3\envs\onj\python.exe "C:/Users/zigsi/Desktop/FRI git/onj-seminar2/cross validation/Model C.py"
+K =  0.2
+1 22 30
+D = 0
+D = 1
+D = 2
+D = 3
+D = 4
+D = 5
+D = 6
+D = 7
+D = 8
+D = 9
+D = 10
+D = 11
+Correct:  93 / 166
+              precision    recall  f1-score   support
+
+         0.0       0.67      0.18      0.28        34
+         1.0       0.32      0.28      0.30        43
+         2.0       0.62      0.84      0.72        89
+
+   micro avg       0.56      0.56      0.56       166
+   macro avg       0.54      0.43      0.43       166
+weighted avg       0.56      0.56      0.52       166
+
+K =  0.4
+1 26 29
+D = 0
+D = 1
+D = 2
+D = 3
+D = 4
+D = 5
+D = 6
+D = 7
+D = 8
+D = 9
+D = 10
+D = 11
+Correct:  98 / 169
+              precision    recall  f1-score   support
+
+         0.0       0.55      0.30      0.39        20
+         1.0       0.17      0.13      0.14        39
+         2.0       0.68      0.79      0.73       110
+
+   micro avg       0.58      0.58      0.58       169
+   macro avg       0.46      0.41      0.42       169
+weighted avg       0.55      0.58      0.56       169
+
+K =  0.6000000000000001
+2 27 25
+D = 0
+D = 1
+D = 2
+D = 3
+D = 4
+D = 5
+D = 6
+D = 7
+D = 8
+D = 9
+D = 10
+D = 11
+Correct:  124 / 170
+              precision    recall  f1-score   support
+
+         0.0       0.40      0.20      0.27        10
+         1.0       0.13      0.21      0.16        19
+         2.0       0.87      0.84      0.86       141
+
+   micro avg       0.73      0.73      0.73       170
+   macro avg       0.47      0.42      0.43       170
+weighted avg       0.76      0.73      0.74       170
+
+K =  0.8
+2 25 29
+D = 0
+D = 1
+D = 2
+D = 3
+D = 4
+D = 5
+D = 6
+D = 7
+D = 8
+D = 9
+D = 10
+D = 11
+Correct:  113 / 169
+              precision    recall  f1-score   support
+
+         0.0       0.86      0.40      0.55        15
+         1.0       0.03      0.05      0.04        19
+         2.0       0.83      0.79      0.81       135
+
+   micro avg       0.67      0.67      0.67       169
+   macro avg       0.57      0.41      0.46       169
+weighted avg       0.75      0.67      0.70       169
+
+K =  1.0
+2 28 27
+D = 0
+D = 1
+D = 2
+D = 3
+D = 4
+D = 5
+D = 6
+D = 7
+D = 8
+D = 9
+D = 10
+D = 11
+Correct:  118 / 176
+              precision    recall  f1-score   support
+
+         0.0       0.57      0.33      0.42        12
+         1.0       0.16      0.21      0.18        28
+         2.0       0.82      0.79      0.81       136
+
+   micro avg       0.67      0.67      0.67       176
+   macro avg       0.52      0.45      0.47       176
+weighted avg       0.70      0.67      0.68       176
+
+F1 micro:  0.6417255968150042
+F1 macro:  0.44321229026431785
+
+Process finished with exit code 0
 '''
