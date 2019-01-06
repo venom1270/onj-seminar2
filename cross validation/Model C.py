@@ -8,6 +8,7 @@ from sklearn.metrics import f1_score
 from sklearn.metrics import classification_report
 from nltk.corpus import wordnet
 from nltk import pos_tag
+import math
 
 # INTERESTING: https://nlpforhackers.io/wordnet-sentence-similarity/
 
@@ -197,6 +198,9 @@ def predict(DATA_train, DATA_test):
                 score, count = 0.0, 0
 
                 # For each word in the first sentence
+
+                idf_sum = 0
+
                 for synset in synsets1:
                     # Get the similarity value of the most similar word in the other sentence
                     #print([ss for ss in synsets2])
@@ -208,14 +212,30 @@ def predict(DATA_train, DATA_test):
                     #for ss in synsets2:
                     #    best_score = max(score, synset.path_similarity(ss))
 
+                    idf_bottom = len([1 for t in pre_answers_10[d] if synset.lemmas()[0].name() in t])
+                    if idf_bottom == 0:
+                        idf = 0
+                    else:
+                        idf = math.log(len(pre_answers_10[d]) / idf_bottom)
+                    best_score *= idf
+                    idf_sum += idf
+
                     # Check that the similarity could have been computed
                     if best_score is not None:
                         score += best_score
                         count += 1
 
                 # Average the values
-                if count != 0:
-                    score /= count
+
+
+
+                #if count != 0:
+                #    score /= count
+                if idf_sum != 0:
+                    score = score / idf_sum
+                else:
+                    score = 0
+                #print(score)
                 max_score = max(max_score, score)
 
             if max_score > 0.6:
@@ -293,16 +313,16 @@ D = 8
 D = 9
 D = 10
 D = 11
-Correct:  93 / 166
+Correct:  88 / 166
               precision    recall  f1-score   support
 
-         0.0       0.50      0.06      0.11        34
-         1.0       0.38      0.23      0.29        43
-         2.0       0.60      0.91      0.72        89
+         0.0       0.33      0.03      0.05        34
+         1.0       0.22      0.05      0.08        43
+         2.0       0.55      0.96      0.70        89
 
-   micro avg       0.56      0.56      0.56       166
-   macro avg       0.49      0.40      0.37       166
-weighted avg       0.52      0.56      0.48       166
+   micro avg       0.53      0.53      0.53       166
+   macro avg       0.37      0.34      0.28       166
+weighted avg       0.42      0.53      0.41       166
 
 K =  0.4
 1 26 29
@@ -318,16 +338,16 @@ D = 8
 D = 9
 D = 10
 D = 11
-Correct:  103 / 169
+Correct:  107 / 169
               precision    recall  f1-score   support
 
-         0.0       0.86      0.30      0.44        20
-         1.0       0.17      0.10      0.13        39
-         2.0       0.67      0.85      0.75       110
+         0.0       0.75      0.30      0.43        20
+         1.0       0.21      0.08      0.11        39
+         2.0       0.67      0.89      0.76       110
 
-   micro avg       0.61      0.61      0.61       169
-   macro avg       0.57      0.42      0.44       169
-weighted avg       0.58      0.61      0.57       169
+   micro avg       0.63      0.63      0.63       169
+   macro avg       0.54      0.42      0.43       169
+weighted avg       0.57      0.63      0.57       169
 
 K =  0.6000000000000001
 2 27 25
@@ -343,16 +363,16 @@ D = 8
 D = 9
 D = 10
 D = 11
-Correct:  122 / 170
+Correct:  131 / 170
               precision    recall  f1-score   support
 
          0.0       0.50      0.10      0.17        10
-         1.0       0.04      0.05      0.05        19
-         2.0       0.83      0.85      0.84       141
+         1.0       0.13      0.11      0.12        19
+         2.0       0.84      0.91      0.87       141
 
-   micro avg       0.72      0.72      0.72       170
-   macro avg       0.46      0.33      0.35       170
-weighted avg       0.73      0.72      0.71       170
+   micro avg       0.77      0.77      0.77       170
+   macro avg       0.49      0.37      0.39       170
+weighted avg       0.74      0.77      0.75       170
 
 K =  0.8
 2 25 29
@@ -368,16 +388,16 @@ D = 8
 D = 9
 D = 10
 D = 11
-Correct:  123 / 169
+Correct:  128 / 169
               precision    recall  f1-score   support
 
-         0.0       1.00      0.27      0.42        15
-         1.0       0.08      0.11      0.09        19
-         2.0       0.83      0.87      0.85       135
+         0.0       0.43      0.20      0.27        15
+         1.0       0.09      0.05      0.07        19
+         2.0       0.82      0.92      0.87       135
 
-   micro avg       0.73      0.73      0.73       169
-   macro avg       0.64      0.41      0.45       169
-weighted avg       0.76      0.73      0.73       169
+   micro avg       0.76      0.76      0.76       169
+   macro avg       0.45      0.39      0.40       169
+weighted avg       0.70      0.76      0.72       169
 
 K =  1.0
 2 28 27
@@ -393,22 +413,18 @@ D = 8
 D = 9
 D = 10
 D = 11
-Correct:  128 / 176
+Correct:  127 / 176
               precision    recall  f1-score   support
 
-         0.0       0.67      0.33      0.44        12
-         1.0       0.12      0.07      0.09        28
-         2.0       0.79      0.90      0.84       136
+         0.0       0.67      0.50      0.57        12
+         1.0       0.00      0.00      0.00        28
+         2.0       0.79      0.89      0.83       136
 
-   micro avg       0.73      0.73      0.73       176
-   macro avg       0.53      0.43      0.46       176
-weighted avg       0.68      0.73      0.69       176
+   micro avg       0.72      0.72      0.72       176
+   macro avg       0.48      0.46      0.47       176
+weighted avg       0.65      0.72      0.68       176
 
-F1 micro:  0.6684877712921109
-F1 macro:  0.4153643453044267
-
-Process finished with exit code 0
-
-
+F1 micro:  0.6825664341382872
+F1 macro:  0.3934993773245003
 
 '''
