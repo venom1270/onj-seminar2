@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="86a3e0c2-a81a-48e5-a7c2-2267fc4978ad" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Model C.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model C.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model B.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model B.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,11 +12,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Model B.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="441">
-              <caret line="285" lean-forward="true" selection-start-line="285" selection-end-line="285" />
+            <state relative-caret-position="529">
+              <caret line="364" column="3" selection-start-line="364" selection-start-column="3" selection-end-line="364" selection-end-column="3" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -24,10 +24,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Model C.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="498">
+            <state relative-caret-position="3080">
               <caret line="588" column="3" selection-start-line="588" selection-start-column="3" selection-end-line="588" selection-end-column="3" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
@@ -57,8 +57,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Model B.py" />
         <option value="$PROJECT_DIR$/Model C.py" />
+        <option value="$PROJECT_DIR$/Model B.py" />
       </list>
     </option>
   </component>
@@ -108,7 +108,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Model C">
+  <component name="RunManager" selected="Python.Model B">
     <configuration name="Model B" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="cross validation" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -153,8 +153,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Model C" />
         <item itemvalue="Python.Model B" />
+        <item itemvalue="Python.Model C" />
       </list>
     </recent_temporary>
   </component>
@@ -195,20 +195,20 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Model B.py">
+    <entry file="file://$PROJECT_DIR$/Model C.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="285" lean-forward="true" selection-start-line="285" selection-end-line="285" />
+        <state relative-caret-position="3080">
+          <caret line="588" column="3" selection-start-line="588" selection-start-column="3" selection-end-line="588" selection-end-column="3" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model C.py">
+    <entry file="file://$PROJECT_DIR$/Model B.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="498">
-          <caret line="588" column="3" selection-start-line="588" selection-start-column="3" selection-end-line="588" selection-end-column="3" />
+        <state relative-caret-position="529">
+          <caret line="364" column="3" selection-start-line="364" selection-start-column="3" selection-end-line="364" selection-end-column="3" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

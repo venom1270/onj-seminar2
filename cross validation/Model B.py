@@ -290,3 +290,76 @@ F1_macro /= 5.0
 
 print("F1 micro: ", F1_micro)
 print("F1 macro: ", F1_macro)
+
+'''
+C:\ProgramData\Miniconda3\envs\onj\python.exe "C:/Users/zigsi/Desktop/FRI git/onj-seminar2/cross validation/Model B.py"
+K =  0.2
+1 22 30
+Correct:  69 / 166
+              precision    recall  f1-score   support
+
+         0.0       0.38      0.35      0.36        34
+         1.0       0.12      0.14      0.13        43
+         2.0       0.60      0.57      0.59        89
+
+   micro avg       0.42      0.42      0.42       166
+   macro avg       0.37      0.36      0.36       166
+weighted avg       0.43      0.42      0.42       166
+
+K =  0.4
+1 26 29
+Correct:  91 / 169
+              precision    recall  f1-score   support
+
+         0.0       0.42      0.55      0.48        20
+         1.0       0.23      0.26      0.24        39
+         2.0       0.70      0.64      0.67       110
+
+   micro avg       0.54      0.54      0.54       169
+   macro avg       0.45      0.48      0.46       169
+weighted avg       0.56      0.54      0.55       169
+
+K =  0.6000000000000001
+2 27 25
+Correct:  117 / 170
+              precision    recall  f1-score   support
+
+         0.0       0.17      0.30      0.21        10
+         1.0       0.21      0.32      0.26        19
+         2.0       0.87      0.77      0.82       141
+
+   micro avg       0.69      0.69      0.69       170
+   macro avg       0.42      0.46      0.43       170
+weighted avg       0.76      0.69      0.72       170
+
+K =  0.8
+2 25 29
+Correct:  117 / 169
+              precision    recall  f1-score   support
+
+         0.0       0.56      0.60      0.58        15
+         1.0       0.21      0.42      0.28        19
+         2.0       0.87      0.74      0.80       135
+
+   micro avg       0.69      0.69      0.69       169
+   macro avg       0.55      0.59      0.55       169
+weighted avg       0.77      0.69      0.72       169
+
+K =  1.0
+2 28 27
+Correct:  115 / 176
+              precision    recall  f1-score   support
+
+         0.0       0.28      0.58      0.38        12
+         1.0       0.26      0.36      0.30        28
+         2.0       0.87      0.72      0.79       136
+
+   micro avg       0.65      0.65      0.65       176
+   macro avg       0.47      0.55      0.49       176
+weighted avg       0.73      0.65      0.68       176
+
+F1 micro:  0.5976152532796757
+F1 macro:  0.4589140941573374
+
+Process finished with exit code 0
+'''
