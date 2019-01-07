@@ -90,14 +90,16 @@ def lemmatize(tokens):
 def preprocess(text):
     tokens = getTokens(text)
     lemmatizer = WordNetLemmatizer()
-    lemmas = [lemmatizer.lemmatize(token) for token in tokens]
+    tagged = pos_tag(tokens)
+    lemmas = [lemmatizer.lemmatize(token[0], penn_to_wn(token[1], default='n')) for token in tagged]
+    #lemmas = [lemmatizer.lemmatize(token) for token in tokens]
     return " ".join(lemmas)
     # pos_tag = nltk.pos_tag(lemmas)
     # print(pos_tag)
     # return " ".join([pt[0] for pt in pos_tag if pt[1] == "NN" or pt[1][0:2] == "VB" or pt[1] == "JJ"])
 
 
-def penn_to_wn(tag):
+def penn_to_wn(tag, default=None):
     """ Convert between a Penn Treebank tag to a simplified Wordnet tag """
     if tag.startswith('N'):
         return 'n'
@@ -111,7 +113,7 @@ def penn_to_wn(tag):
     if tag.startswith('R'):
         return 'r'
 
-    return None
+    return default
 
 
 def tagged_to_synset(word, tag):
@@ -584,6 +586,142 @@ weighted avg       0.70      0.67      0.68       176
 
 F1 micro:  0.6417255968150042
 F1 macro:  0.44321229026431785
+
+Process finished with exit code 0
+'''
+
+
+#RUN 3 (added proper lemmatization)
+
+'''
+C:\ProgramData\Miniconda3\envs\onj\python.exe "C:/Users/zigsi/Desktop/FRI git/onj-seminar2/cross validation/Model C.py"
+K =  0.2
+1 22 30
+D = 0
+D = 1
+D = 2
+D = 3
+D = 4
+D = 5
+D = 6
+D = 7
+D = 8
+D = 9
+D = 10
+D = 11
+Correct:  98 / 166
+              precision    recall  f1-score   support
+
+         0.0       0.89      0.24      0.37        34
+         1.0       0.38      0.35      0.36        43
+         2.0       0.64      0.84      0.73        89
+
+   micro avg       0.59      0.59      0.59       166
+   macro avg       0.63      0.48      0.49       166
+weighted avg       0.62      0.59      0.56       166
+
+K =  0.4
+1 26 29
+D = 0
+D = 1
+D = 2
+D = 3
+D = 4
+D = 5
+D = 6
+D = 7
+D = 8
+D = 9
+D = 10
+D = 11
+Correct:  99 / 169
+              precision    recall  f1-score   support
+
+         0.0       0.60      0.30      0.40        20
+         1.0       0.20      0.15      0.17        39
+         2.0       0.67      0.79      0.73       110
+
+   micro avg       0.59      0.59      0.59       169
+   macro avg       0.49      0.41      0.43       169
+weighted avg       0.56      0.59      0.56       169
+
+K =  0.6000000000000001
+2 27 25
+D = 0
+D = 1
+D = 2
+D = 3
+D = 4
+D = 5
+D = 6
+D = 7
+D = 8
+D = 9
+D = 10
+D = 11
+Correct:  121 / 170
+              precision    recall  f1-score   support
+
+         0.0       0.25      0.10      0.14        10
+         1.0       0.12      0.21      0.15        19
+         2.0       0.88      0.82      0.85       141
+
+   micro avg       0.71      0.71      0.71       170
+   macro avg       0.42      0.38      0.38       170
+weighted avg       0.76      0.71      0.73       170
+
+K =  0.8
+2 25 29
+D = 0
+D = 1
+D = 2
+D = 3
+D = 4
+D = 5
+D = 6
+D = 7
+D = 8
+D = 9
+D = 10
+D = 11
+Correct:  117 / 169
+              precision    recall  f1-score   support
+
+         0.0       1.00      0.47      0.64        15
+         1.0       0.08      0.16      0.11        19
+         2.0       0.86      0.79      0.82       135
+
+   micro avg       0.69      0.69      0.69       169
+   macro avg       0.65      0.47      0.52       169
+weighted avg       0.78      0.69      0.73       169
+
+K =  1.0
+2 28 27
+D = 0
+D = 1
+D = 2
+D = 3
+D = 4
+D = 5
+D = 6
+D = 7
+D = 8
+D = 9
+D = 10
+D = 11
+Correct:  118 / 176
+              precision    recall  f1-score   support
+
+         0.0       0.57      0.33      0.42        12
+         1.0       0.15      0.18      0.16        28
+         2.0       0.81      0.80      0.80       136
+
+   micro avg       0.67      0.67      0.67       176
+   macro avg       0.51      0.44      0.46       176
+weighted avg       0.69      0.67      0.68       176
+
+F1 micro:  0.6501374411991541
+F1 macro:  0.4573741644266425
 
 Process finished with exit code 0
 '''
