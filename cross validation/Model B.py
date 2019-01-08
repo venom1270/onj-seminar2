@@ -68,7 +68,7 @@ def penn_to_wn(tag):
 
     return 'n'
 
-def openie_extract(text, resolve_coref=True):
+def openie_extract(text, resolve_coref=False):
 
     if resolve_coref:
         url = 'http://localhost:9000/?properties={"annotators": "tokenize,ssplit,pos,lemma,openie,coref", "outputFormat": "json", "openie.resolve_coref": "true", "openie.triple.strict": "false", "openie.triple.all_nominals": "false"}'
@@ -118,11 +118,10 @@ def predict(DATA_train, DATA_test):
 
     BASE_TRIPLES = []
     for i in DATA_train:
-        data = i[0][3] + " "  # answers[i] + " " + texts[i]
+        data = i[0][3] + ". "  # answers[i] + " " + texts[i]
         for j in i:  # loop through all tuples
-            data += j[2] + " "
+            data += j[2] + ". "
         BASE_TRIPLES.append(openie_extract(data.encode("utf8")))
-
 
 
     pre_answers_00 = []
@@ -251,7 +250,7 @@ def predict(DATA_train, DATA_test):
                 p += 0.5
                 p = min(p, 1)
 
-            # p = p_tfidf
+            #p = p_tfidf
 
 
             # if d == 0 and i == len(test_answers)-1:
@@ -459,6 +458,159 @@ F1 micro:  0.5988227402538039
 F1 macro:  0.4625849775931939
 
 Process finished with exit code 0
+
+
+'''
+
+
+
+'''
+ZDAJ SE DODAJA PIKA PRI GENERIRANJU TROJCKOV -> bolj nazorni konci stavkov
+
+C:\ProgramData\Miniconda3\envs\onj\python.exe "C:/Users/zigsi/Desktop/FRI/onj-seminar2/cross validation/Model B.py"
+K =  0.2
+Correct:  72 / 166
+              precision    recall  f1-score   support
+
+         0.0       0.44      0.35      0.39        34
+         1.0       0.17      0.21      0.19        43
+         2.0       0.59      0.57      0.58        89
+
+   micro avg       0.43      0.43      0.43       166
+   macro avg       0.40      0.38      0.39       166
+weighted avg       0.45      0.43      0.44       166
+
+K =  0.4
+Correct:  91 / 169
+              precision    recall  f1-score   support
+
+         0.0       0.43      0.50      0.47        20
+         1.0       0.22      0.26      0.24        39
+         2.0       0.70      0.65      0.67       110
+
+   micro avg       0.54      0.54      0.54       169
+   macro avg       0.45      0.47      0.46       169
+weighted avg       0.56      0.54      0.55       169
+
+K =  0.6000000000000001
+Correct:  115 / 170
+              precision    recall  f1-score   support
+
+         0.0       0.22      0.20      0.21        10
+         1.0       0.14      0.26      0.18        19
+         2.0       0.86      0.77      0.81       141
+
+   micro avg       0.68      0.68      0.68       170
+   macro avg       0.41      0.41      0.40       170
+weighted avg       0.75      0.68      0.71       170
+
+K =  0.8
+Correct:  117 / 169
+              precision    recall  f1-score   support
+
+         0.0       0.62      0.53      0.57        15
+         1.0       0.20      0.42      0.27        19
+         2.0       0.87      0.75      0.80       135
+
+   micro avg       0.69      0.69      0.69       169
+   macro avg       0.56      0.57      0.55       169
+weighted avg       0.77      0.69      0.72       169
+
+K =  1.0
+Correct:  117 / 176
+              precision    recall  f1-score   support
+
+         0.0       0.37      0.58      0.45        12
+         1.0       0.25      0.39      0.31        28
+         2.0       0.88      0.73      0.80       136
+
+   micro avg       0.66      0.66      0.66       176
+   macro avg       0.50      0.57      0.52       176
+weighted avg       0.74      0.66      0.69       176
+
+F1 micro:  0.6011494972072576
+F1 macro:  0.4629411138688403
+
+Process finished with exit code 0
+
+
+'''
+
+'''
+BREZ KOREFERENČNOSTI ---- zgleda najboljše
+
+
+C:\ProgramData\Miniconda3\envs\onj\python.exe "C:/Users/zigsi/Desktop/FRI/onj-seminar2/cross validation/Model B.py"
+K =  0.2
+1 22 30
+Correct:  78 / 166
+              precision    recall  f1-score   support
+
+         0.0       0.41      0.26      0.32        34
+         1.0       0.17      0.16      0.16        43
+         2.0       0.61      0.70      0.65        89
+
+   micro avg       0.47      0.47      0.47       166
+   macro avg       0.39      0.37      0.38       166
+weighted avg       0.45      0.47      0.46       166
+
+K =  0.4
+1 26 29
+Correct:  96 / 169
+              precision    recall  f1-score   support
+
+         0.0       0.53      0.45      0.49        20
+         1.0       0.22      0.23      0.23        39
+         2.0       0.70      0.71      0.71       110
+
+   micro avg       0.57      0.57      0.57       169
+   macro avg       0.48      0.46      0.47       169
+weighted avg       0.57      0.57      0.57       169
+
+K =  0.6000000000000001
+2 27 25
+Correct:  131 / 170
+              precision    recall  f1-score   support
+
+         0.0       0.40      0.20      0.27        10
+         1.0       0.23      0.26      0.24        19
+         2.0       0.87      0.88      0.87       141
+
+   micro avg       0.77      0.77      0.77       170
+   macro avg       0.50      0.45      0.46       170
+weighted avg       0.77      0.77      0.77       170
+
+K =  0.8
+2 25 29
+Correct:  126 / 169
+              precision    recall  f1-score   support
+
+         0.0       0.78      0.47      0.58        15
+         1.0       0.23      0.37      0.29        19
+         2.0       0.86      0.83      0.85       135
+
+   micro avg       0.75      0.75      0.75       169
+   macro avg       0.62      0.55      0.57       169
+weighted avg       0.78      0.75      0.76       169
+
+K =  1.0
+2 28 27
+Correct:  121 / 176
+              precision    recall  f1-score   support
+
+         0.0       0.38      0.50      0.43        12
+         1.0       0.26      0.32      0.29        28
+         2.0       0.84      0.78      0.81       136
+
+   micro avg       0.69      0.69      0.69       176
+   macro avg       0.49      0.53      0.51       176
+weighted avg       0.72      0.69      0.70       176
+
+F1 micro:  0.6483154441644057
+F1 macro:  0.47859409651209733
+
+Process finished with exit code 0
+
 
 
 '''
