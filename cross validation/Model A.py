@@ -100,6 +100,21 @@ def preprocess(text):
     # print(pos_tag)
     # return " ".join([pt[0] for pt in pos_tag if pt[1] == "NN" or pt[1][0:2] == "VB" or pt[1] == "JJ"])
 
+
+def removeCommmonWords(question, answer):
+    for word in question.split():
+        answer = answer.replace(word + " ", "")
+        answer = answer.replace(word + ".", "")
+        answer = answer.replace(word + ",", "")
+        answer = answer.replace(word + "!", "")
+    return answer
+
+
+remove = False
+if remove:
+    for i in range(len(questions)):
+        answers[i] = removeCommmonWords(questions[i], answers[i])
+
 pre_answer = preprocess(answers[0])
 pre_text = preprocess(texts[0])
 pre_answers = [preprocess(a) for a in answers]

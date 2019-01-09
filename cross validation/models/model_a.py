@@ -122,15 +122,10 @@ def predictScore(question, answer):
             questionNumber = i
             break
     if questionNumber == -1:
-        print(questionNumber)
         return None
 
-    print(questionNumber)
-
-    test_answers = [[answer]]
-
-
-
+    if remove:
+        test_answers = [[removeCommmonWords(question, answer)]]
 
     correct = 0
 
