@@ -103,17 +103,21 @@ def preprocess(text):
 
 def removeCommmonWords(question, answer):
     for word in question.split():
-        answer = answer.replace(word + " ", "")
-        answer = answer.replace(word + ".", "")
-        answer = answer.replace(word + ",", "")
-        answer = answer.replace(word + "!", "")
+        answer = answer.replace(" " + word + " ", " ")
+        answer = answer.replace(" " + word + ".", "")
+        answer = answer.replace(" " + word + ",", "")
+        answer = answer.replace(" " + word + "!", "")
     return answer
-
 
 remove = False
 if remove:
     for i in range(len(questions)):
         answers[i] = removeCommmonWords(questions[i], answers[i])
+
+    for i in range(len(test_answers)):
+        for j in range(len(test_answers[i])):
+            test_answers[i][j] = removeCommmonWords(questions[i], test_answers[i][j])
+
 
 pre_answer = preprocess(answers[0])
 pre_text = preprocess(texts[0])
