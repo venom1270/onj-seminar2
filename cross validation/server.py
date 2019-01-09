@@ -2,10 +2,18 @@ from flask import Flask
 from flask import json
 from flask import request
 from flask import Response
+import time
 
-#from models.model_b import *
+from models.model_b import train as trainB
+from models.model_b import predictScore as predictB
 from models.model_c import predictScore as predictC
 
+start = time.time()
+
+print("Training for model B...")
+trainB()
+end = time.time()
+print("Training finished in {0:.2f} seconds.".format(end - start))
 
 
 app = Flask(__name__)
@@ -25,7 +33,7 @@ def api_articles():
     if modelId == "A":
         resScore = "ToDo za model A"
     elif modelId == "B":
-        resScore = "ToDo za model B"
+        resScore = predictB(question, questionResponse)
     elif modelId == "C":
         resScore = predictC(question, questionResponse)
 
