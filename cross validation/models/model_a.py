@@ -126,6 +126,8 @@ def predictScore(question, answer):
 
     if remove:
         test_answers = [[removeCommmonWords(question, answer)]]
+    else:
+        test_answers = [[answer]]
 
     correct = 0
 
