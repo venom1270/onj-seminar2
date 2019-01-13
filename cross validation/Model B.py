@@ -11,11 +11,11 @@ from nltk import pos_tag
 
 
 # parameters
-remove = False  # removes all the words used in the question from both answers
+remove = True  # removes all the words used in the question from both answers
 
 use_cosine = True  # upošteva cosinusno podobnost
 
-openie = 2
+openie = 0
 # 0 - off
 # 1 - on (no coref)
 # 2 - on (with coref)
@@ -127,6 +127,8 @@ def preprocess(text):
     # return " ".join([pt[0] for pt in pos_tag if pt[1] == "NN" or pt[1][0:2] == "VB" or pt[1] == "JJ"])
 
 def removeCommmonWords(question, answer, useDumb = False):
+    question = preprocess(question)
+    answer = preprocess(answer)
     if useDumb:  # bolj primitiven pristop, a deluje bolje v nekaterih primerih
         for word in question.split():
             word = word.replace(".", "")
@@ -381,38 +383,43 @@ def run_model():
     print("F1 micro: ", F1_micro)
     print("F1 macro: ", F1_macro)
 
-# parameters
-remove = False  # removes all the words used in the question from both answers
-use_cosine = True  # upošteva cosinusno podobnost
-openie = 0
-# 0 - off
-# 1 - on (no coref)
-# 2 - on (with coref)
-# 3 - Samo za testiranje - Klemen (ker mi ne dela coref)
 
-run_model()
-remove = True
-run_model()
-remove = False
-openie = 1
-run_model()
-openie = 2
-run_model()
-remove = True
-openie = 1
-run_model()
-openie = 2
-run_model()
-use_cosine = False
-remove = False
-openie = 1
-run_model()
-openie = 2
-run_model()
-remove = True
-openie = 1
-run_model()
-openie = 2
+def run_all():
+
+    # parameters
+    remove = False  # removes all the words used in the question from both answers
+    use_cosine = True  # upošteva cosinusno podobnost
+    openie = 0
+    # 0 - off
+    # 1 - on (no coref)
+    # 2 - on (with coref)
+    # 3 - Samo za testiranje - Klemen (ker mi ne dela coref)
+
+    run_model()
+    remove = True
+    run_model()
+    remove = False
+    openie = 1
+    run_model()
+    openie = 2
+    run_model()
+    remove = True
+    openie = 1
+    run_model()
+    openie = 2
+    run_model()
+    use_cosine = False
+    remove = False
+    openie = 1
+    run_model()
+    openie = 2
+    run_model()
+    remove = True
+    openie = 1
+    run_model()
+    openie = 2
+    run_model()
+
 run_model()
 
 '''

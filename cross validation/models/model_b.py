@@ -10,6 +10,16 @@ from sklearn.model_selection import train_test_split
 from nltk import pos_tag
 
 
+# parameters
+remove_b = False  # removes all the words used in the question from both answers
+use_cosine_b = True  # upošteva cosinusno podobnost
+openie_b = 2
+# 0 - off
+# 1 - on (no coref)
+# 2 - on (with coref)
+# 3 - Samo za testiranje - Klemen (ker mi ne dela coref)
+
+
 def read_data():
     f = open("../data/dataset - fixed.csv", "r", encoding="utf-8")
 
@@ -68,12 +78,14 @@ def penn_to_wn(tag):
 
     return 'n'
 
-def openie_extract(text, resolve_coref=False):
-
-    if resolve_coref:
-        url = 'http://localhost:9000/?properties={"annotators": "tokenize,ssplit,pos,lemma,openie,coref", "outputFormat": "json", "openie.resolve_coref": "true", "openie.triple.strict": "false", "openie.triple.all_nominals": "false"}'
-    else:
+def openie_extract(text, coref_param):
+    if coref_param == 1:  # openie, no coref
         url = 'http://localhost:9000/?properties={"annotators": "tokenize,ssplit,pos,lemma,openie,coref", "outputFormat": "json", "openie.resolve_coref": "false", "openie.triple.strict": "false", "openie.triple.all_nominals": "false"}'
+    elif coref_param == 2:  # openie with coref
+        url = 'http://localhost:9000/?properties={"annotators": "tokenize,ssplit,pos,lemma,openie,coref", "outputFormat": "json", "openie.resolve_coref": "true", "openie.triple.strict": "false", "openie.triple.all_nominals": "false"}'
+    elif coref_param == 3:  # samo za testiranje - Klemen
+        url = 'http://localhost:9000/?properties={"annotators": "tokenize,ssplit,pos,lemma,openie", "outputFormat": "json", "openie.triple.strict": "false", "openie.triple.all_nominals": "false"}'
+
     data = text
     response = requests.post(url, data=data)
     response.encoding = "utf-8"
@@ -112,6 +124,31 @@ def preprocess(text):
     # print(pos_tag)
     # return " ".join([pt[0] for pt in pos_tag if pt[1] == "NN" or pt[1][0:2] == "VB" or pt[1] == "JJ"])
 
+def removeCommmonWords(question, answer, useDumb = False):
+    if useDumb:  # bolj primitiven pristop, a deluje bolje v nekaterih primerih
+        for word in question.split():
+            word = word.replace(".", "")
+            word = word.replace(",", "")
+            word = word.replace("!", "")
+            word = word.replace("?", "")
+
+            answer = answer.replace(" " + word + " ", " ")
+            answer = answer.replace(" " + word + ".", "")
+            answer = answer.replace(" " + word + ",", "")
+            answer = answer.replace(" " + word + "!", "")
+        return answer
+    else:
+        ret = []
+        for wordA in getTokens(answer):
+            duplicate = False
+            for word in getTokens(question):
+                if word == wordA:
+                    duplicate = True
+                    break
+            if not duplicate:
+                ret.append(wordA)
+        return ' '.join([str(x) for x in ret])
+
 
 data_train = read_data()
 
@@ -124,18 +161,27 @@ trained_pre_texts = []
 
 
 def train():
-    for i in data_train:
-        data = i[0][3] + ". "  # answers[i] + " " + texts[i]
-        for j in i:  # loop through all tuples
-            data += j[2] + ". "
-        trained_base_triples.append(openie_extract(data.encode("utf8")))
+    if openie_b > 0:
+        for i in data_train:
+            data = i[0][3] + ". "  # answers[i] + " " + texts[i]
+            for j in i:  # loop through all tuples
+                data += j[2] + ". "
+            trained_base_triples.append(openie_extract(data.encode("utf8"), openie_b))
 
     for i in data_train:
-        trained_pre_answers_00.append([preprocess(ans[2]) for ans in i if ans[1] == '0' and len(ans[2].split(" ")) > 3])
-        trained_pre_answers_05.append([preprocess(ans[2]) for ans in i if ans[1] == '0.5' and len(ans[2].split(" ")) > 2])
-        trained_pre_answers_10.append([preprocess(ans[2]) for ans in i if ans[1] == '1' and len(ans[2].split(" ")) > 0])
-        trained_pre_texts.append(preprocess(i[0][3]))
-    print(len(trained_pre_answers_00[0]), len(trained_pre_answers_05[0]), len(trained_pre_answers_10[0]))
+        question = i[0][0]
+        #questions_all.append(question)
+        if remove_b:
+            trained_pre_answers_00.append([preprocess(removeCommmonWords(question, ans[2])) for ans in i if ans[1] == '0' and len(ans[2].split(" ")) > 3])
+            trained_pre_answers_05.append([preprocess(removeCommmonWords(question, ans[2])) for ans in i if ans[1] == '0.5' and len(ans[2].split(" ")) > 2])
+            trained_pre_answers_10.append([preprocess(removeCommmonWords(question, ans[2])) for ans in i if ans[1] == '1' and len(ans[2].split(" ")) > 0])
+        else:
+            trained_pre_answers_00.append([preprocess(ans[2]) for ans in i if ans[1] == '0' and len(ans[2].split(" ")) > 3])
+            trained_pre_answers_05.append([preprocess(ans[2]) for ans in i if ans[1] == '0.5' and len(ans[2].split(" ")) > 2])
+            trained_pre_answers_10.append([preprocess(ans[2]) for ans in i if ans[1] == '1' and len(ans[2].split(" ")) > 0])
+            trained_pre_texts.append(preprocess(i[0][3]))
+
+    #print(len(trained_pre_answers_00[0]), len(trained_pre_answers_05[0]), len(trained_pre_answers_10[0]))
 
 
 # Evaluacija posameznega vprašanja
@@ -159,7 +205,11 @@ def predictScore(question, answer):
     true_grades = []
     predicted_grades = []
 
-    test_answers = [answer]
+    test_answers = []
+    if remove_b:
+        test_answers = [removeCommmonWords(preprocess(question), preprocess(answer))]
+    else:
+        test_answers = [answer]
     # if d == 0:
     #    test_answers.append("blabla")
     # test_grades = [float(a[1]) for a in DATA_test[d]]
@@ -199,7 +249,8 @@ def predictScore(question, answer):
         all_count += 1  # only for statistics at the end
 
         test_answer = test_answers[i]
-        triples = openie_extract(test_answer.encode("utf8"))
+        if openie_b > 0:  # če je 0, potem je coref izključen
+            triples = openie_extract(test_answer.encode("utf8"), openie_b)
 
         p = 0
         p_tfidf = 0
@@ -231,34 +282,41 @@ def predictScore(question, answer):
             p_tfidf = 0
         # '''
         # else:
-        for bt in trained_base_triples[questionNumber]:
-            for t in triples:
-                # if t[0] == bt[0] or t[1] == bt[1] or t[2] == bt[2]:
-                if (t[0] == bt[0] and t[1] == bt[1]) or (t[0] == bt[0] and t[2] == bt[2]) or (
-                        t[1] == bt[1] and t[2] == bt[2]):
-                    # print(t)
-                    # print(bt)
-                    p_triples += 1
-        # p_triples = p_triples*4 / max(len(triples), 1)
-        prediction = 0
-        if p_triples >= 1:
-            p_triples = 1
-        elif p_triples >= 0.5:
-            p_triples = 0.5
-        else:
-            p_triples = 0
 
-        p = (p_triples + p_tfidf * 2) / 3
-        if p > 0 and p < 1 and p != 0.5:
-            p = 0.5
+        if openie_b > 0:
+            for bt in trained_base_triples[questionNumber]:
+                for t in triples:
+                    # if t[0] == bt[0] or t[1] == bt[1] or t[2] == bt[2]:
+                    if (t[0] == bt[0] and t[1] == bt[1]) or (t[0] == bt[0] and t[2] == bt[2]) or (
+                            t[1] == bt[1] and t[2] == bt[2]):
+                        # print(t)
+                        # print(bt)
+                        p_triples += 1
+            # p_triples = p_triples*4 / max(len(triples), 1)
+            prediction = 0
+            if p_triples >= 1:
+                p_triples = 1
+            elif p_triples >= 0.5:
+                p_triples = 0.5
+            else:
+                p_triples = 0
 
-        p = p_tfidf
-        if p_triples == 0:
-            p -= 0.5
-            p = max(p, 0)
+            if use_cosine_b:  # Uporabi oboje
+                p = (p_triples + p_tfidf * 2) / 3
+                if p > 0 and p < 1 and p != 0.5:
+                    p = 0.5
+
+                p = p_tfidf
+                if p_triples == 0:
+                    p -= 0.5
+                    p = max(p, 0)
+                else:
+                    p += 0.5
+                    p = min(p, 1)
+            else:
+                p = p_triples  # Uporabi samo triples
         else:
-            p += 0.5
-            p = min(p, 1)
+            p = p_tfidf
 
         # p = p_tfidf
 

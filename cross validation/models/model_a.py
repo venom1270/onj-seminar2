@@ -1,6 +1,12 @@
 import requests
 from nltk import pos_tag
 
+
+remove_a = False  # removes all the words used in the question from both answers
+use_length_a = False  # If the answer is too short, deduct points
+use_cosine_a = True  # upošteva cosinusno podobnost
+openie_a = 0
+
 f = open("../data/Weightless_dataset_train_A.csv", "r", encoding="utf-8")
 first = True
 questions = []
@@ -22,14 +28,13 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 
 
-def openie_extract(text, resolve_coref=True):
-
-    if resolve_coref:
-        url = 'http://localhost:9000/?properties={"annotators": "tokenize,ssplit,pos,lemma,openie,coref", "outputFormat": "json", "openie.resolve_coref": "true", "openie.triple.strict": "false", "openie.triple.all_nominals": "false"}'
-        # DISABLE COREF # url = 'http://localhost:9000/?properties={"annotators": "tokenize,ssplit,pos,lemma,openie", "outputFormat": "json", "openie.triple.strict": "false", "openie.triple.all_nominals": "false"}'
-
-    else:
+def openie_extract(text, coref_param):
+    if coref_param == 1:  # openie, no coref
         url = 'http://localhost:9000/?properties={"annotators": "tokenize,ssplit,pos,lemma,openie,coref", "outputFormat": "json", "openie.resolve_coref": "false", "openie.triple.strict": "false", "openie.triple.all_nominals": "false"}'
+    elif coref_param == 2:  # openie with coref
+        url = 'http://localhost:9000/?properties={"annotators": "tokenize,ssplit,pos,lemma,openie,coref", "outputFormat": "json", "openie.resolve_coref": "true", "openie.triple.strict": "false", "openie.triple.all_nominals": "false"}'
+    elif coref_param == 3:  # samo za testiranje - Klemen
+        url = 'http://localhost:9000/?properties={"annotators": "tokenize,ssplit,pos,lemma,openie", "outputFormat": "json", "openie.triple.strict": "false", "openie.triple.all_nominals": "false"}'
     data = text
     response = requests.post(url, data=data)
     response.encoding = "utf-8"
@@ -74,17 +79,41 @@ def preprocess(text):
     # return " ".join([pt[0] for pt in pos_tag if pt[1] == "NN" or pt[1][0:2] == "VB" or pt[1] == "JJ"])
 
 
-def removeCommmonWords(question, answer):
-    for word in question.split():
-        answer = answer.replace(word + " ", "")
-        answer = answer.replace(word + ".", "")
-        answer = answer.replace(word + ",", "")
-        answer = answer.replace(word + "!", "")
-    return answer
+def removeCommmonWords(question, answer, useDumb = False):
+    if useDumb:  # bolj primitiven pristop, a deluje bolje v nekaterih primerih
+        for word in question.split():
+            word = word.replace(".", "")
+            word = word.replace(",", "")
+            word = word.replace("!", "")
+            word = word.replace("?", "")
 
+            answer = answer.replace(" " + word + " ", " ")
+            answer = answer.replace(" " + word + ".", "")
+            answer = answer.replace(" " + word + ",", "")
+            answer = answer.replace(" " + word + "!", "")
+        return answer
+    else:
+        ret = []
+        for wordA in getTokens(answer):
+            duplicate = False
+            for word in getTokens(question):
+                if word == wordA:
+                    duplicate = True
+                    break
+            if not duplicate:
+                ret.append(wordA)
+        return ' '.join([str(x) for x in ret])
 
-remove = False
-if remove:
+def is_long_enough(ref_answer, test_answer):
+    len_a = len(getTokens(ref_answer))
+    len_b = len(getTokens(test_answer))
+
+    if (float(len_b) / float(len_a)) < 0.5:  # ali je odgovor vsaj polovico toliko dolg kot referenčni?
+        return False  # prekratek odgovor
+    else:
+        return True
+
+if remove_a:
     for i in range(len(questions)):
         answers[i] = removeCommmonWords(questions[i], answers[i])
 
@@ -95,9 +124,10 @@ pre_texts = [preprocess(t) for t in texts]
 trained_base_triples = []
 
 def train():
-    for i in range(len(texts)):
-        data = answers[i] + ". " + texts[i]
-        trained_base_triples.append(openie_extract(data.encode("utf8")))
+    if openie_a > 0:
+        for i in range(len(texts)):
+            data = answers[i] + ". " + texts[i]
+            trained_base_triples.append(openie_extract(data.encode("utf8"), openie_a))
 
 
 
@@ -124,7 +154,7 @@ def predictScore(question, answer):
     if questionNumber == -1:
         return None
 
-    if remove:
+    if remove_a:
         test_answers = [[removeCommmonWords(question, answer)]]
     else:
         test_answers = [[answer]]
@@ -156,30 +186,38 @@ def predictScore(question, answer):
         else:
             p_tfidf = 0
 
-        triples = openie_extract(test_answers[0][i].encode("utf8"))
-        for bt in trained_base_triples:
-            for t in triples:
-                #if t[0] == bt[0] or t[1] == bt[1] or t[2] == bt[2]:
-                if (t[0] == bt[0] and t[1] == bt[1]) or (t[0] == bt[0] and t[2] == bt[2]) or (
-                        t[1] == bt[1] and t[2] == bt[2]):
-                    p_triples += 1
+        if openie_a > 0:
 
-        if p_triples >= 1:
-            p_triples = 1
-        elif p_triples >= 0.5:
-            p_triples = 0.5
-        else:
-            p_triples = 0
+            triples = openie_extract(test_answers[0][i].encode("utf8"), openie_a)
+            for bt in trained_base_triples:
+                for t in triples:
+                    #if t[0] == bt[0] or t[1] == bt[1] or t[2] == bt[2]:
+                    if (t[0] == bt[0] and t[1] == bt[1]) or (t[0] == bt[0] and t[2] == bt[2]) or (
+                            t[1] == bt[1] and t[2] == bt[2]):
+                        p_triples += 1
 
+        if use_cosine_a:  # upošteva kosinusno podobnost
+            if openie_a == 0:  # openie iključen
+                p = p_tfidf
+            else:  # upošteva tudi openie
+                # mogoče uporabit drugačno povprečje
+                p_avg = float(p_tfidf + p_triples) / 2
+                if p_avg < 0.25:
+                    p = 0
+                elif p_avg < 0.75:
+                    p = 0.5
+                else:
+                    p = 1
+        else:  # upošteva samo openie, brez kosinusne podobnosti
+            p = p_triples
 
-        if p_triples == 0:
+        # če je odgovor prekratek, odbije pol točke
+        if use_length_a and not is_long_enough(answers[q], test_answers[q][i]):
             p -= 0.5
-            p = max(p, 0)
-        else:
-            p += 0.5
-            p = min(p, 1)
+            if p < 0:
+                p = 0
 
-        p = p_tfidf
+
         return p
 
 
