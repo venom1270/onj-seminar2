@@ -15,7 +15,7 @@ remove = False  # removes all the words used in the question from both answers
 
 use_cosine = True  # upošteva cosinusno podobnost
 
-openie = 0
+openie = 2
 # 0 - off
 # 1 - on (no coref)
 # 2 - on (with coref)
@@ -157,14 +157,6 @@ def predict(DATA_train, DATA_test):
 
     ## DATA[question_number] -> tuples of (queston, grade, answer, text)
 
-    BASE_TRIPLES = []
-    if openie > 0:  # če je 0, je coref izključen
-        for i in DATA_train:
-            data = i[0][3] + ". "  # answers[i] + " " + texts[i]
-            for j in i:  # loop through all tuples
-                data += j[2] + ". "
-            BASE_TRIPLES.append(openie_extract(data.encode("utf8"), openie))
-
 
     pre_answers_00 = []
     pre_answers_05 = []
@@ -184,6 +176,20 @@ def predict(DATA_train, DATA_test):
             pre_answers_10.append([preprocess(ans[2]) for ans in i if ans[1] == '1' and len(ans[2].split(" ")) > 0])
         pre_texts.append(preprocess(i[0][3]))
     print(len(pre_answers_00[0]), len(pre_answers_05[0]), len(pre_answers_10[0]))
+
+    BASE_TRIPLES = []
+    if openie > 0:  # če je 0, je coref izključen
+        for i1 in range(len(DATA_train)):
+            i = DATA_train[i1]
+            data = i[0][3] + ". "  # answers[i] + " " + texts[i]
+            for j in i:  # loop through all tuples
+                # print(questions_all[i1]) # vprašanje
+                # print(j[2]) # odgovor
+                if remove:
+                    data += removeCommmonWords(questions_all[i1], j[2]) + ". "
+                else:
+                    data += j[2] + ". "
+            BASE_TRIPLES.append(openie_extract(data.encode("utf8"), openie))
 
 
     # weights = vect.transform(test_answers)
