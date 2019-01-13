@@ -1,0 +1,11 @@
+Parametri: remove:  True
+
+F1 micro:  0.6228763511470812
+F1 macro:  0.43436197356166606
+
+__________________________________
+
+Parametri: remove:  False
+
+F1 micro:  0.6501374411991541
+F1 macro:  0.4573741644266425
