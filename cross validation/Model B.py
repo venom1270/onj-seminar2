@@ -11,9 +11,11 @@ from nltk import pos_tag
 
 
 # parameters
+remove = False  # removes all the words used in the question from both answers
+
 use_cosine = True  # upošteva cosinusno podobnost
 
-openie = 0
+openie = 2
 # 0 - off
 # 1 - on (no coref)
 # 2 - on (with coref)
@@ -124,29 +126,70 @@ def preprocess(text):
     # print(pos_tag)
     # return " ".join([pt[0] for pt in pos_tag if pt[1] == "NN" or pt[1][0:2] == "VB" or pt[1] == "JJ"])
 
+def removeCommmonWords(question, answer, useDumb = False):
+    if useDumb:  # bolj primitiven pristop, a deluje bolje v nekaterih primerih
+        for word in question.split():
+            word = word.replace(".", "")
+            word = word.replace(",", "")
+            word = word.replace("!", "")
+            word = word.replace("?", "")
+
+            answer = answer.replace(" " + word + " ", " ")
+            answer = answer.replace(" " + word + ".", "")
+            answer = answer.replace(" " + word + ",", "")
+            answer = answer.replace(" " + word + "!", "")
+        return answer
+    else:
+        ret = []
+        for wordA in getTokens(answer):
+            duplicate = False
+            for word in getTokens(question):
+                if word == wordA:
+                    duplicate = True
+                    break
+            if not duplicate:
+                ret.append(wordA)
+        return ' '.join([str(x) for x in ret])
+
 def predict(DATA_train, DATA_test):
 
-    ## DATA[question_number] -> tuples of (queston, grade, answer, text)
 
-    BASE_TRIPLES = []
-    if openie > 0:  # če je 0, je coref izključen
-        for i in DATA_train:
-            data = i[0][3] + ". "  # answers[i] + " " + texts[i]
-            for j in i:  # loop through all tuples
-                data += j[2] + ". "
-            BASE_TRIPLES.append(openie_extract(data.encode("utf8"), openie))
+
+    ## DATA[question_number] -> tuples of (queston, grade, answer, text)
 
 
     pre_answers_00 = []
     pre_answers_05 = []
     pre_answers_10 = []
     pre_texts = []
+    questions_all = []
     for i in DATA_train:
-        pre_answers_00.append([preprocess(ans[2]) for ans in i if ans[1] == '0' and len(ans[2].split(" ")) > 3])
-        pre_answers_05.append([preprocess(ans[2]) for ans in i if ans[1] == '0.5' and len(ans[2].split(" ")) > 2])
-        pre_answers_10.append([preprocess(ans[2]) for ans in i if ans[1] == '1' and len(ans[2].split(" ")) > 0])
+        question = i[0][0]
+        questions_all.append(question)
+        if remove:
+            pre_answers_00.append([preprocess(removeCommmonWords(question, ans[2])) for ans in i if ans[1] == '0' and len(ans[2].split(" ")) > 3])
+            pre_answers_05.append([preprocess(removeCommmonWords(question, ans[2])) for ans in i if ans[1] == '0.5' and len(ans[2].split(" ")) > 2])
+            pre_answers_10.append([preprocess(removeCommmonWords(question, ans[2])) for ans in i if ans[1] == '1' and len(ans[2].split(" ")) > 0])
+        else:
+            pre_answers_00.append([preprocess(ans[2]) for ans in i if ans[1] == '0' and len(ans[2].split(" ")) > 3])
+            pre_answers_05.append([preprocess(ans[2]) for ans in i if ans[1] == '0.5' and len(ans[2].split(" ")) > 2])
+            pre_answers_10.append([preprocess(ans[2]) for ans in i if ans[1] == '1' and len(ans[2].split(" ")) > 0])
         pre_texts.append(preprocess(i[0][3]))
     print(len(pre_answers_00[0]), len(pre_answers_05[0]), len(pre_answers_10[0]))
+
+    BASE_TRIPLES = []
+    if openie > 0:  # če je 0, je coref izključen
+        for i1 in range(len(DATA_train)):
+            i = DATA_train[i1]
+            data = i[0][3] + ". "  # answers[i] + " " + texts[i]
+            for j in i:  # loop through all tuples
+                # print(questions_all[i1]) # vprašanje
+                # print(j[2]) # odgovor
+                if remove:
+                    data += removeCommmonWords(questions_all[i1], j[2]) + ". "
+                else:
+                    data += j[2] + ". "
+            BASE_TRIPLES.append(openie_extract(data.encode("utf8"), openie))
 
 
     # weights = vect.transform(test_answers)
@@ -161,7 +204,11 @@ def predict(DATA_train, DATA_test):
 
     ## DATA[question_number] -> triples of (queston, grade, answer, text)
     for d in range(len(DATA_test)):
-        test_answers = [a[2] for a in DATA_test[d]]
+        if remove:
+            test_answers = [removeCommmonWords(questions_all[d], a[2]) for a in DATA_test[d]]
+        else:
+            test_answers = [a[2] for a in DATA_test[d]]
+
         # if d == 0:
         #    test_answers.append("blabla")
         test_grades = [float(a[1]) for a in DATA_test[d]]
@@ -294,7 +341,7 @@ def predict(DATA_train, DATA_test):
 
 DATA = read_data()
 
-print("Parametri: cosine: ", use_cosine, ", openie: ", openie)
+print("Parametri: remove: ", remove, "cosine: ", use_cosine, ", openie: ", openie)
 
 
 ratio = 0.8  # 0.8 train data, 0.2 test data FOR EACH QUESTION
