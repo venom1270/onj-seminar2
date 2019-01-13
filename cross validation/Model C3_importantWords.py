@@ -20,6 +20,8 @@ openie = 0
 # 2 - on (with coref)
 # 3 - Samo za testiranje - Klemen (ker mi ne dela coref)
 
+#Presledek spredaj je pomemben!
+additionalWordsToRemoveFromQuestion = " and or she he it his her its"
 
 numSynonyms = 0
 stemWords = False
@@ -206,7 +208,7 @@ def importantWords(question, answers, stem=False, threshold=0):
 
 
     question = preprocess(question)
-    answers_1 = [removeCommmonWords(question + " and or she he it his her its", preprocess(a)) for a in answers]
+    answers_1 = [removeCommmonWords(question + additionalWordsToRemoveFromQuestion, preprocess(a)) for a in answers]
 
     answers = []
     if stem:
