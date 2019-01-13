@@ -14,49 +14,6 @@ openie = 0
 # 2 - on (with coref)
 # 3 - Samo za testiranje - Klemen (ker mi ne dela coref)
 
-f = open("../data/Weightless_dataset_train_A.csv", "r", encoding="utf-8")
-first = True
-questions = []
-answers = []
-grades = []
-texts = []
-for line in f:
-    if first:
-        first = False
-        continue
-    s = line.split(";")
-    questions.append(s[10])
-    answers.append(s[11])
-    grades.append(s[14])
-    texts.append(s[15])
-
-f = open("../data/dataset - fixed.csv", "r", encoding="utf8")
-
-first = True
-questions_all = []
-answers_all = []
-grades_all = []
-texts_all = []
-for line in f:
-    if first:
-        first = False
-        continue
-    s = line.split(";")
-    questions_all.append(s[10])
-    answers_all.append(s[11])
-    grades_all.append(s[14])
-    texts_all.append(s[15])
-# test_answers = [answers_all[i] for i in range(len(questions_all)) if questions_all[i] == questions[0]]
-# test_answers = [answers_all[i] for i in range(len(questions_all))]
-test_answers = []
-test_grades = []
-for q in range(len(questions)):
-    test_answers.append([answers_all[i] for i in range(len(questions_all)) if questions_all[i] == questions[q]])
-    test_grades.append(
-        [float(grades_all[i].replace(",", ".")) for i in range(len(questions_all)) if questions_all[i] == questions[q]])
-# test_grades = [float(grades_all[i].replace(",", ".")) for i in range(len(questions_all)) if questions_all[i] == questions[0]]
-# test_grades = [float(grades_all[i].replace(",", ".")) for i in range(len(questions_all))]
-print([len(t) for t in test_answers])
 
 
 import string
@@ -151,126 +108,222 @@ def is_long_enough(ref_answer, test_answer):
         return True
 
 
-# vse besede ki so v vprašarnju odstrani iz obeh odgovorov
-if remove:
-    for i in range(len(questions)):
-        answers[i] = removeCommmonWords(questions[i], answers[i])
+def predict():
+    f = open("../data/Weightless_dataset_train_A.csv", "r", encoding="utf-8")
+    first = True
+    questions = []
+    answers = []
+    grades = []
+    texts = []
+    for line in f:
+        if first:
+            first = False
+            continue
+        s = line.split(";")
+        questions.append(s[10])
+        answers.append(s[11])
+        grades.append(s[14])
+        texts.append(s[15])
 
-    for i in range(len(test_answers)):
-        for j in range(len(test_answers[i])):
-            test_answers[i][j] = removeCommmonWords(questions[i], test_answers[i][j])
+    f = open("../data/dataset - fixed.csv", "r", encoding="utf8")
+
+    first = True
+    questions_all = []
+    answers_all = []
+    grades_all = []
+    texts_all = []
+    for line in f:
+        if first:
+            first = False
+            continue
+        s = line.split(";")
+        questions_all.append(s[10])
+        answers_all.append(s[11])
+        grades_all.append(s[14])
+        texts_all.append(s[15])
+    # test_answers = [answers_all[i] for i in range(len(questions_all)) if questions_all[i] == questions[0]]
+    # test_answers = [answers_all[i] for i in range(len(questions_all))]
+    test_answers = []
+    test_grades = []
+    for q in range(len(questions)):
+        test_answers.append([answers_all[i] for i in range(len(questions_all)) if questions_all[i] == questions[q]])
+        test_grades.append(
+            [float(grades_all[i].replace(",", ".")) for i in range(len(questions_all)) if
+             questions_all[i] == questions[q]])
+    # test_grades = [float(grades_all[i].replace(",", ".")) for i in range(len(questions_all)) if questions_all[i] == questions[0]]
+    # test_grades = [float(grades_all[i].replace(",", ".")) for i in range(len(questions_all))]
+    print([len(t) for t in test_answers])
+
+    # vse besede ki so v vprašarnju odstrani iz obeh odgovorov
+    if remove:
+        for i in range(len(questions)):
+            answers[i] = removeCommmonWords(questions[i], answers[i])
+
+        for i in range(len(test_answers)):
+            for j in range(len(test_answers[i])):
+                test_answers[i][j] = removeCommmonWords(questions[i], test_answers[i][j])
 
 
-pre_answer = preprocess(answers[0])
-pre_text = preprocess(texts[0])
-pre_answers = [preprocess(a) for a in answers]
-pre_texts = [preprocess(t) for t in texts]
+    pre_answer = preprocess(answers[0])
+    pre_text = preprocess(texts[0])
+    pre_answers = [preprocess(a) for a in answers]
+    pre_texts = [preprocess(t) for t in texts]
 
 
-#TRIPLES
-BASE_TRIPLES = []
-if openie > 0:  # če je 0, je coref izključen
-    for i in range(len(texts)):
-        data = answers[i] + ". " + texts[i]
-        BASE_TRIPLES.append(openie_extract(data.encode("utf8"), openie))
+    #TRIPLES
+    BASE_TRIPLES = []
+    if openie > 0:  # če je 0, je coref izključen
+        for i in range(len(texts)):
+            data = answers[i] + ". " + texts[i]
+            BASE_TRIPLES.append(openie_extract(data.encode("utf8"), openie))
 
 
-from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-vect = TfidfVectorizer()  # parameters for tokenization, stopwords can be passed
-
-documents = []
-for i in range(len(texts)):
-    documents.append(pre_answers[i])
-    documents.append(pre_texts[i])
-tfidf = vect.fit_transform(documents)
-cosine = (tfidf * tfidf.T).A
-
-correct = 0
-
-true_grades = []
-predicted_grades = []
-
-for q in range(0, len(texts)):  # Loop through all questions
     vect = TfidfVectorizer()  # parameters for tokenization, stopwords can be passed
-    # tfidf = vect.fit_transform([texts[0], answers[0]])
-    # tfidf = vect.fit_transform([pre_answer, pre_text])
-    tfidf = vect.fit_transform([pre_answers[q], pre_texts[q]])
+
+    documents = []
+    for i in range(len(texts)):
+        documents.append(pre_answers[i])
+        documents.append(pre_texts[i])
+    tfidf = vect.fit_transform(documents)
     cosine = (tfidf * tfidf.T).A
-    # print("Cosine similarity between the documents: \n{}".format(cosine))
-    weights = vect.transform([preprocess(ta) for ta in test_answers[q]])
-    predict = tfidf * weights.T
-    for i in range(predict.shape[1]):  # Loop through all answers
-        p = 0
-        p_tfidf = 0
-        p_triples = 0
-        prediction = max(predict[0, i], predict[1, i])
-        if prediction > 0.3:  # 0.5
-            p_tfidf = 1
-        elif prediction > 0.2:  # 0.3
-            p_tfidf = 0.5
-        else:
+
+    correct = 0
+
+    true_grades = []
+    predicted_grades = []
+
+    for q in range(0, len(texts)):  # Loop through all questions
+        vect = TfidfVectorizer()  # parameters for tokenization, stopwords can be passed
+        # tfidf = vect.fit_transform([texts[0], answers[0]])
+        # tfidf = vect.fit_transform([pre_answer, pre_text])
+        tfidf = vect.fit_transform([pre_answers[q], pre_texts[q]])
+        cosine = (tfidf * tfidf.T).A
+        # print("Cosine similarity between the documents: \n{}".format(cosine))
+        weights = vect.transform([preprocess(ta) for ta in test_answers[q]])
+        predict = tfidf * weights.T
+        for i in range(predict.shape[1]):  # Loop through all answers
+            p = 0
             p_tfidf = 0
-
-        if openie > 0:  # če je 0, potem je coref izključen
-            triples = openie_extract(test_answers[q][i].encode("utf8"), openie)
-            for bt in BASE_TRIPLES:
-                for t in triples:
-                    #if t[0] == bt[0] or t[1] == bt[1] or t[2] == bt[2]:
-                    if (t[0] == bt[0] and t[1] == bt[1]) or (t[0] == bt[0] and t[2] == bt[2]) or (
-                            t[1] == bt[1] and t[2] == bt[2]):
-                        p_triples += 1
-
-            if p_triples >= 1:
-                p_triples = 1
-            elif p_triples >= 0.5:
-                p_triples = 0.5
+            p_triples = 0
+            prediction = max(predict[0, i], predict[1, i])
+            if prediction > 0.3:  # 0.5
+                p_tfidf = 1
+            elif prediction > 0.2:  # 0.3
+                p_tfidf = 0.5
             else:
-                p_triples = 0
+                p_tfidf = 0
 
-            if p_triples == 0:
-                p -= 0.5
-                p = max(p, 0)
-            else:
-                p += 0.5
-                p = min(p, 1)
+            if openie > 0:  # če je 0, potem je coref izključen
+                triples = openie_extract(test_answers[q][i].encode("utf8"), openie)
+                for bt in BASE_TRIPLES:
+                    for t in triples:
+                        #if t[0] == bt[0] or t[1] == bt[1] or t[2] == bt[2]:
+                        if (t[0] == bt[0] and t[1] == bt[1]) or (t[0] == bt[0] and t[2] == bt[2]) or (
+                                t[1] == bt[1] and t[2] == bt[2]):
+                            p_triples += 1
 
-        if use_cosine:  # upošteva kosinusno podobnost
-            if openie == 0:  # openie iključen
-                p = p_tfidf
-            else:  # upošteva tudi openie
-                # mogoče uporabit drugačno povprečje
-                p_avg = float(p_tfidf + p_triples) / 2
-                if p_avg < 0.25:
-                    p = 0
-                elif p_avg < 0.75:
-                    p = 0.5
+                if p_triples >= 1:
+                    p_triples = 1
+                elif p_triples >= 0.5:
+                    p_triples = 0.5
                 else:
-                    p = 1
-        else:  # upošteva samo openie, brez kosinusne podobnosti
-            p = p_triples
+                    p_triples = 0
 
-        # če je odgovor prekratek, odbije pol točke
-        if use_length and not is_long_enough(answers[q], test_answers[q][i]):
-            p -= 0.5
-            if p < 0:
-                p = 0
+                if p_triples == 0:
+                    p -= 0.5
+                    p = max(p, 0)
+                else:
+                    p += 0.5
+                    p = min(p, 1)
 
-        if abs(p - test_grades[q][i]) <= 0:
-            correct += 1
+            if use_cosine:  # upošteva kosinusno podobnost
+                if openie == 0:  # openie iključen
+                    p = p_tfidf
+                else:  # upošteva tudi openie
+                    # mogoče uporabit drugačno povprečje
+                    p_avg = float(p_tfidf + p_triples) / 2
+                    if p_avg < 0.25:
+                        p = 0
+                    elif p_avg < 0.75:
+                        p = 0.5
+                    else:
+                        p = 1
+            else:  # upošteva samo openie, brez kosinusne podobnosti
+                p = p_triples
 
-        true_grades.append(test_grades[q][i])
-        predicted_grades.append(p)
-print("Parametri: remove: ", remove, ", use_length: ", use_length, ", cosine: ", use_cosine, ", openie: ", openie)
-print("Correct: ", correct, "/", len(questions_all))
+            # če je odgovor prekratek, odbije pol točke
+            if use_length and not is_long_enough(answers[q], test_answers[q][i]):
+                p -= 0.5
+                if p < 0:
+                    p = 0
 
-tg = [i * 2 for i in true_grades]
-pg = [i * 2 for i in predicted_grades]
+            if abs(p - test_grades[q][i]) <= 0:
+                correct += 1
 
-from sklearn.metrics import classification_report
+            true_grades.append(test_grades[q][i])
+            predicted_grades.append(p)
+    print("Parametri: remove: ", remove, ", use_length: ", use_length, ", cosine: ", use_cosine, ", openie: ", openie)
+    print("Correct: ", correct, "/", len(questions_all))
 
-print(classification_report(tg, pg))
+    tg = [i * 2 for i in true_grades]
+    pg = [i * 2 for i in predicted_grades]
+
+    from sklearn.metrics import classification_report
+
+    print(classification_report(tg, pg))
+
+
+remove = False  # removes all the words used in the question from both answers
+use_length = False  # If the answer is too short, deduct points
+use_cosine = True  # upošteva cosinusno podobnost
+openie = 0
+# 0 - off
+# 1 - on (no coref)
+# 2 - on (with coref)
+# 3 - Samo za testiranje - Klemen (ker mi ne dela coref)
+
+predict()
+openie = 1
+predict()
+openie = 2
+predict()
+
+openie = 0
+remove = True
+predict()
+openie = 1
+predict()
+openie = 2
+predict()
+
+remove = False
+openie = 0
+use_length = True
+predict()
+openie = 1
+predict()
+openie = 2
+predict()
+
+remove = True
+openie = 0
+predict()
+openie = 1
+predict()
+openie = 2
+predict()
+
+remove = False
+use_length = False
+use_cosine = False
+openie = 1
+predict()
+openie = 2
+predict()
+
 
 
 '''

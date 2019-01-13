@@ -1,0 +1,32 @@
+Parametri: remove:  False cosine:  True , openie:  0
+C:\ProgramData\Miniconda3\envs\onj\lib\site-packages\sklearn\metrics\classification.py:1143: UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no predicted samples.
+  'precision', 'predicted', average, warn_for)
+F1 micro:  0.672134836215412
+F1 macro:  0.38244334205017466
+Parametri: remove:  True cosine:  True , openie:  0
+F1 micro:  0.621770465401142
+F1 macro:  0.3957896326719816
+Parametri: remove:  False cosine:  True , openie:  1
+F1 micro:  0.6483154441644057
+F1 macro:  0.47859409651209733
+Parametri: remove:  False cosine:  True , openie:  2
+F1 micro:  0.6011024288909586
+F1 macro:  0.4627280801729465
+Parametri: remove:  True cosine:  True , openie:  1
+F1 micro:  0.49724375431034656
+F1 macro:  0.42029043419730916
+Parametri: remove:  True cosine:  True , openie:  2
+F1 micro:  0.39428358562878546
+F1 macro:  0.3679811072005621
+Parametri: remove:  False cosine:  False , openie:  1
+F1 micro:  0.631089719444814
+F1 macro:  0.3626965799860477
+Parametri: remove:  False cosine:  False , openie:  2
+F1 micro:  0.5814601042527227
+F1 macro:  0.3463410808270854
+Parametri: remove:  True cosine:  False , openie:  1
+F1 micro:  0.4540039949692134
+F1 macro:  0.2926434326080805
+Parametri: remove:  True cosine:  False , openie:  2
+F1 micro:  0.3391239574632422
+F1 macro:  0.23752017771873096
