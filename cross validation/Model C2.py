@@ -230,7 +230,7 @@ def predict(DATA_train, DATA_test):
             pre_answers_05.append([preprocess(ans[2]) for ans in i if ans[1] == '0.5' and len(ans[2].split(" ")) > 2])
             pre_answers_10.append([preprocess(ans[2]) for ans in i if ans[1] == '1' and len(ans[2].split(" ")) > 0])
         pre_texts.append(preprocess(i[0][3]))
-    print(len(pre_answers_00[0]), len(pre_answers_05[0]), len(pre_answers_10[0]))
+    #print(len(pre_answers_00[0]), len(pre_answers_05[0]), len(pre_answers_10[0]))
 
     BASE_TRIPLES = []
     if openie > 0:  # če je 0, je coref izključen
@@ -395,50 +395,77 @@ def predict(DATA_train, DATA_test):
             if p == test_grades[i]:
                 correct += 1
 
-    print("Correct: ", correct, "/", all_count)
+    #print("Correct: ", correct, "/", all_count)
 
     return true_grades, predicted_grades, correct, all_count
 
 
-DATA = read_data()
+def run_model():
 
-print("Parametri: remove: ", remove, "cosine: ", use_cosine, ", openie: ", openie)
+    DATA = read_data()
 
-
-ratio = 0.8  # 0.8 train data, 0.2 test data FOR EACH QUESTION
-
-F1_micro = 0
-F1_macro = 0
-
-k = 0.2
-while k <= 1:
-    print("K = ", k)
-
-    DATA_train = []
-    DATA_test = []
-    for i in DATA:
-        split1 = int(len(i) * (k-0.2))
-        split2 = int(len(i) * k)
-        DATA_train.append(i[0:split1] + i[split2:])  # if good_ans[1] == '1'])
-        DATA_test.append(i[split1:split2])
-    k += 0.2
-
-    true_grades, predicted_grades, correct, all_count = predict(DATA_train, DATA_test)
-
-    tg = [i * 2 for i in true_grades]
-    pg = [i * 2 for i in predicted_grades]
-
-    print(classification_report(tg, pg))
-
-    F1_micro += f1_score(tg, pg, average="micro")
-    F1_macro += f1_score(tg, pg, average="macro")
+    print("Parametri: remove: ", remove, "cosine: ", use_cosine, ", openie: ", openie, ", no_of_synonyms: ", no_of_synonyms)
 
 
-F1_micro /= 5.0
-F1_macro /= 5.0
+    ratio = 0.8  # 0.8 train data, 0.2 test data FOR EACH QUESTION
 
-print("F1 micro: ", F1_micro)
-print("F1 macro: ", F1_macro)
+    F1_micro = 0
+    F1_macro = 0
+
+    k = 0.2
+    while k <= 1:
+        #print("K = ", k)
+
+        DATA_train = []
+        DATA_test = []
+        for i in DATA:
+            split1 = int(len(i) * (k-0.2))
+            split2 = int(len(i) * k)
+            DATA_train.append(i[0:split1] + i[split2:])  # if good_ans[1] == '1'])
+            DATA_test.append(i[split1:split2])
+        k += 0.2
+
+        true_grades, predicted_grades, correct, all_count = predict(DATA_train, DATA_test)
+
+        tg = [i * 2 for i in true_grades]
+        pg = [i * 2 for i in predicted_grades]
+
+        #print(classification_report(tg, pg))
+
+        F1_micro += f1_score(tg, pg, average="micro")
+        F1_macro += f1_score(tg, pg, average="macro")
+
+
+    F1_micro /= 5.0
+    F1_macro /= 5.0
+
+    print("F1 micro: ", F1_micro)
+    print("F1 macro: ", F1_macro)
+
+
+# parameters
+remove = False  # removes all the words used in the question from both answers
+use_cosine = True  # upošteva cosinusno podobnost
+openie = 1
+# 0 - off
+# 1 - on (no coref)
+# 2 - on (with coref)
+# 3 - Samo za testiranje - Klemen (ker mi ne dela coref)
+no_of_synonyms = 0  # koliko sinomimov poišče v wordnetu za vsako besedo
+
+for i in range(1,4):
+    no_of_synonyms = i
+    openie = 1
+    remove = False
+    run_model()
+    remove = True
+    run_model()
+    remove = False
+    openie = 2
+    run_model()
+    remove = True
+    run_model()
+
 
 '''
 

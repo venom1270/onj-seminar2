@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="86a3e0c2-a81a-48e5-a7c2-2267fc4978ad" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Model A.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model A.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model B.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model B.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model C2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model C2.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -13,11 +13,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Model B.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-496">
-              <caret line="377" column="19" selection-start-line="377" selection-start-column="19" selection-end-line="377" selection-end-column="19" />
+            <state relative-caret-position="198">
+              <caret line="391" lean-forward="true" selection-start-line="391" selection-end-line="391" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -25,68 +25,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model C.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2002">
-              <caret line="121" column="17" selection-start-line="121" selection-start-column="17" selection-end-line="121" selection-end-column="17" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model A.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="320" column="18" lean-forward="true" selection-start-line="320" selection-start-column="18" selection-end-line="320" selection-end-column="18" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Model C2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="163" column="11" selection-start-line="163" selection-start-column="11" selection-end-line="163" selection-end-column="11" />
+            <state relative-caret-position="440">
+              <caret line="458" column="18" selection-start-line="458" selection-start-column="18" selection-end-line="458" selection-end-column="18" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model C3_importantWords.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="17" column="9" lean-forward="true" selection-start-line="17" selection-start-column="9" selection-end-line="17" selection-end-column="9" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/ProgramData/Miniconda3/envs/onj/Lib/site-packages/nltk/corpus/reader/wordnet.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="1883" selection-start-line="1883" selection-end-line="1883" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/ProgramData/Miniconda3/envs/onj/Lib/site-packages/sklearn/feature_extraction/text.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="194">
-              <caret line="1602" selection-start-line="1602" selection-end-line="1602" />
             </state>
           </provider>
         </entry>
@@ -107,12 +53,14 @@
       <find>PREPRO</find>
       <find>openie</find>
       <find>prepro</find>
-      <find>synon</find>
       <find>no_of_synonyms</find>
+      <find>synon</find>
+      <find>remove</find>
       <find>formTri</find>
       <find>and or</find>
-      <find>remove</find>
       <find>print</find>
+      <find>no_of_</find>
+      <find>rint</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -122,11 +70,11 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Model C.py" />
-        <option value="$PROJECT_DIR$/Model C2.py" />
         <option value="$PROJECT_DIR$/Model B2_importantwords.py" />
         <option value="$PROJECT_DIR$/Model C3_importantWords.py" />
         <option value="$PROJECT_DIR$/Model A.py" />
         <option value="$PROJECT_DIR$/Model B.py" />
+        <option value="$PROJECT_DIR$/Model C2.py" />
       </list>
     </option>
   </component>
@@ -177,7 +125,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Model B">
+  <component name="RunManager" selected="Python.Model C2">
     <configuration name="Model A" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="cross validation" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -241,19 +189,19 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Model C" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="Model C2" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="cross validation" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\ProgramData\Miniconda3\envs\onj\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model C.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model C2.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -306,18 +254,18 @@
     </configuration>
     <list>
       <item itemvalue="Python.Model B" />
-      <item itemvalue="Python.Model C" />
       <item itemvalue="Python.Model A" />
       <item itemvalue="Python.Model B2_importantwords" />
       <item itemvalue="Python.Model C3_importantWords" />
+      <item itemvalue="Python.Model C2" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Model C2" />
         <item itemvalue="Python.Model B" />
         <item itemvalue="Python.Model A" />
         <item itemvalue="Python.Model C3_importantWords" />
         <item itemvalue="Python.Model B2_importantwords" />
-        <item itemvalue="Python.Model C" />
       </list>
     </recent_temporary>
   </component>
@@ -390,36 +338,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/ProgramData/Miniconda3/envs/onj/Lib/site-packages/sklearn/feature_extraction/text.py">
+    <entry file="file://$PROJECT_DIR$/Model A.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="1602" selection-start-line="1602" selection-end-line="1602" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/ProgramData/Miniconda3/envs/onj/Lib/site-packages/nltk/corpus/reader/wordnet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="1883" selection-start-line="1883" selection-end-line="1883" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model C.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2002">
-          <caret line="121" column="17" selection-start-line="121" selection-start-column="17" selection-end-line="121" selection-end-column="17" />
+        <state relative-caret-position="292">
+          <caret line="320" column="18" lean-forward="true" selection-start-line="320" selection-start-column="18" selection-end-line="320" selection-end-column="18" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model C2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="163" column="11" selection-start-line="163" selection-start-column="11" selection-end-line="163" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -434,20 +358,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model A.py">
+    <entry file="file://C:/ProgramData/Miniconda3/envs/onj/Lib/site-packages/nltk/corpus/reader/wordnet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="320" column="18" lean-forward="true" selection-start-line="320" selection-start-column="18" selection-end-line="320" selection-end-column="18" />
+        <state relative-caret-position="177">
+          <caret line="1883" selection-start-line="1883" selection-end-line="1883" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/ProgramData/Miniconda3/envs/onj/Lib/site-packages/sklearn/feature_extraction/text.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="1602" selection-start-line="1602" selection-end-line="1602" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model C.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6508">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
           <folding>
-            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Model B.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-496">
-          <caret line="377" column="19" selection-start-line="377" selection-start-column="19" selection-end-line="377" selection-end-column="19" />
+        <state relative-caret-position="198">
+          <caret line="391" lean-forward="true" selection-start-line="391" selection-end-line="391" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model C2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="458" column="18" selection-start-line="458" selection-start-column="18" selection-end-line="458" selection-end-column="18" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

@@ -1,0 +1,36 @@
+Parametri: remove:  False cosine:  True , openie:  1 , no_of_synonyms:  1
+F1 micro:  0.6542470298877376
+F1 macro:  0.48311892256759953
+Parametri: remove:  True cosine:  True , openie:  1 , no_of_synonyms:  1
+F1 micro:  0.4996036568512445
+F1 macro:  0.4222593220539115
+Parametri: remove:  False cosine:  True , openie:  2 , no_of_synonyms:  1
+F1 micro:  0.6058789313505009
+F1 macro:  0.46560413487943153
+Parametri: remove:  True cosine:  True , openie:  2 , no_of_synonyms:  1
+F1 micro:  0.3966434881696835
+F1 macro:  0.3693537610200912
+Parametri: remove:  False cosine:  True , openie:  1 , no_of_synonyms:  2
+F1 micro:  0.6554732364892917
+F1 macro:  0.4816253659912779
+Parametri: remove:  True cosine:  True , openie:  1 , no_of_synonyms:  2
+F1 micro:  0.4996036568512445
+F1 macro:  0.4222593220539115
+Parametri: remove:  False cosine:  True , openie:  2 , no_of_synonyms:  2
+F1 micro:  0.6059003186749465
+F1 macro:  0.464032724191345
+Parametri: remove:  True cosine:  True , openie:  2 , no_of_synonyms:  2
+F1 micro:  0.3966434881696835
+F1 macro:  0.3693537610200912
+Parametri: remove:  False cosine:  True , openie:  1 , no_of_synonyms:  3
+F1 micro:  0.6554732364892917
+F1 macro:  0.4816253659912779
+Parametri: remove:  True cosine:  True , openie:  1 , no_of_synonyms:  3
+F1 micro:  0.5019635593921425
+F1 macro:  0.4239791511801923
+Parametri: remove:  False cosine:  True , openie:  2 , no_of_synonyms:  3
+F1 micro:  0.6059003186749465
+F1 macro:  0.464032724191345
+Parametri: remove:  True cosine:  True , openie:  2 , no_of_synonyms:  3
+F1 micro:  0.3966434881696835
+F1 macro:  0.3693537610200912
