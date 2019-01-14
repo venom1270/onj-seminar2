@@ -15,7 +15,7 @@ additionalWordsToRemoveFromQuestion = " and or she he it his her its"
 
 numSynonyms = 0
 stemWords = False
-importantWordThreshold = 0.02
+importantWordThreshold = 0.01
 
 score10threshold = 0.5
 score05threshold = 0.4

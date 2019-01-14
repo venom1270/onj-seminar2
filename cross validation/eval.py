@@ -22,7 +22,7 @@ def parseArguments(argv):
     except getopt.GetoptError:
         print('./onj-eval.py -v -t <test-file> [-s <server-url>]')
         sys.exit(2)
-    TEST_FILE = "../data/Weightless_dataset_train.csv"
+    TEST_FILE = "../data/dataset - eval.csv"
     for opt, arg in opts:
         if opt == '-h':
             print('./onj-eval.py -v -t <test-file> [-s <server-url>]')
