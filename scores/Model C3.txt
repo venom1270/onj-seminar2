@@ -1,0 +1,35 @@
+importantWordThreshhold:  0.01 ,score05threshold :  0.5 ,score10threshold :  0.6
+MICRO:  0.5756899880635092
+MACRO:  0.4288215307308493
+
+importantWordThreshhold:  0.01 ,score05threshold :  0.4 ,score10threshold :  0.5
+MICRO:  0.7091782425719078
+MACRO:  0.5192150793921539
+
+importantWordThreshhold:  0.01 ,score05threshold :  0.3 ,score10threshold :  0.4
+MICRO:  0.7153007692574558
+MACRO:  0.40733413266494634
+
+importantWordThreshhold:  0.02 ,score05threshold :  0.5 ,score10threshold :  0.6
+MICRO:  0.6426913298226605
+MACRO:  0.4248318276497397
+
+importantWordThreshhold:  0.02 ,score05threshold :  0.4 ,score10threshold :  0.5
+MICRO:  0.714249954918875
+MACRO:  0.48748890851008786
+
+importantWordThreshhold:  0.02 ,score05threshold :  0.3 ,score10threshold :  0.4
+MICRO:  0.7236350321705771
+MACRO:  0.39842244098681323
+
+importantWordThreshhold:  0.03 ,score05threshold :  0.5 ,score10threshold :  0.6
+MICRO:  0.6377704514860378
+MACRO:  0.3882664527083808
+
+importantWordThreshhold:  0.03 ,score05threshold :  0.4 ,score10threshold :  0.5
+MICRO:  0.6966605646711137
+MACRO:  0.447264363182184
+
+importantWordThreshhold:  0.03 ,score05threshold :  0.3 ,score10threshold :  0.4
+MICRO:  0.7049782371583604
+MACRO:  0.38238822772426007
