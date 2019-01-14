@@ -43,6 +43,8 @@ def api_articles():
     question = parse["question"]
     questionResponse = parse["questionResponse"]
 
+    #question = question.encode("utf-8")
+
     if modelId == "A":
         resScore = predictA(question, questionResponse)
     elif modelId == "B":

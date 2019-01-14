@@ -17,12 +17,13 @@ def parseArguments(argv):
     global TEST_FILE
     global SERVER_URL
     global VERBOSE
+    VERBOSE = True
     try:
         opts, args = getopt.getopt(argv, "hvt:s:", ["verbose", "test-file=", "server-url="])
     except getopt.GetoptError:
         print('./onj-eval.py -v -t <test-file> [-s <server-url>]')
         sys.exit(2)
-    TEST_FILE = "../data/dataset - eval.csv"
+    TEST_FILE = "../data/Weightless_dataset_test.csv"
     for opt, arg in opts:
         if opt == '-h':
             print('./onj-eval.py -v -t <test-file> [-s <server-url>]')
@@ -45,17 +46,21 @@ def evaluate():
 
         trueScores = []
         predScores = []
-        with open(TEST_FILE) as csvFile:
+        with open(TEST_FILE, "r", encoding="utf-8") as csvFile:
             reader = csv.DictReader(csvFile)
             for example in reader:
-                print(example)
+                #print(example)
                 trueScore = int(float(example["Final.rating"].replace(",", "."))*10)
                 trueScores.append(trueScore)
+                #s = example["Question"]
+                #print(s)
                 req = {
                     "modelId": model,
                     "question": example["Question"],
                     "questionResponse": example["Response"]
                 }
+
+                #print()
 
                 res = requests.post(url = SERVER_URL, json = req)
                 json_data = json.loads(res.text)
