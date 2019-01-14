@@ -8,6 +8,7 @@ from models.model_a import train as trainA
 from models.model_a import predictScore as predictA
 from models.model_b import train as trainB
 from models.model_b import predictScore as predictB
+from models.model_c import train as trainC
 from models.model_c import predictScore as predictC
 
 
@@ -16,8 +17,13 @@ start = time.time()
 print("Training for model A...")
 trainA()
 
+print("Training for model C...")
+trainC()
+
 print("Training for model B...")
 trainB()
+
+
 
 end = time.time()
 print("Training finished in {0:.2f} seconds.".format(end - start))

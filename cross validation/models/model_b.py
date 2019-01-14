@@ -13,7 +13,7 @@ from nltk import pos_tag
 # parameters
 remove_b = False  # removes all the words used in the question from both answers
 use_cosine_b = True  # upošteva cosinusno podobnost
-openie_b = 2
+openie_b = 1
 # 0 - off
 # 1 - on (no coref)
 # 2 - on (with coref)

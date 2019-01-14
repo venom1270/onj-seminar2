@@ -2,7 +2,7 @@ import requests
 from nltk import pos_tag
 
 
-remove_a = False  # removes all the words used in the question from both answers
+remove_a = True  # removes all the words used in the question from both answers
 use_length_a = False  # If the answer is too short, deduct points
 use_cosine_a = True  # upošteva cosinusno podobnost
 openie_a = 0
